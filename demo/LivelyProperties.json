@@ -1,0 +1,42 @@
+{
+  "effectMode": {
+    "type": "dropdown",
+    "value": 0,
+    "text": "Görsel Model Seç (Demo: İlk 3 Model Açık, 04-50 PRO)",
+    "items": [
+      "✅ 01 // [DEMO AÇIK] 3D Perspektif Blok LED Ekolayzer & Ayna Yansıma",
+      "✅ 02 // [DEMO AÇIK] Neon Halka Portal & Merkez Ses Dalgası",
+      "✅ 03 // [DEMO AÇIK] Parlak Kule LED Segment Sütunları & Izgara",
+      "🔒 04 // [PRO SÜRÜM] Dikey Neon Çizgi Perdesi & Dalga Işık Sırtı",
+      "🔒 05 // [PRO SÜRÜM] 3D İzometrik Noktalı Dalga Telleri",
+      "🔒 06 // [PRO SÜRÜM] Vibrant Fiber-Optik Dalga Perdesi & Bokeh",
+      "🔒 07–50 // [PRO SÜRÜM] Diğer 44 Profesyonel Ses Görselleştirici Modeli"
+    ]
+  },
+  "colorPalette": {
+    "type": "dropdown",
+    "value": 0,
+    "text": "Renk Modu",
+    "items": [
+      "00 • 🌟 Orijinal Görsel Spektrumu",
+      "01 • 🔄 Otomatik Değişen Renk Döngüsü",
+      "02 • ⚡ Cyber Neon (Siyan / Pembe / Mor)"
+    ]
+  },
+  "audioSensitivity": {
+    "max": 3.0,
+    "min": 0.2,
+    "step": 0.1,
+    "text": "Ses Frekans Hassasiyeti (Gain)",
+    "type": "slider",
+    "value": 1.6
+  },
+  "bassBoost": {
+    "max": 3.0,
+    "min": 0.5,
+    "step": 0.1,
+    "text": "Bass Vuruş Gücü",
+    "type": "slider",
+    "value": 1.8
+  }
+}

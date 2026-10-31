@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wave Audio Visualizer — FREE DEMO (3 Models Unlocked)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+    html, body {
+      width: 100vw; height: 100vh; overflow: hidden;
+      background: #030308;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: #f4f6ff;
+    }
+    #waveCanvas { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; z-index: 1; }
+    #hud {
+      position: fixed; bottom: 20px; left: 24px; z-index: 10;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding: 12px 18px; border-radius: 16px;
+      background: rgba(8, 8, 18, 0.86);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85);
+    }
+    .badge-demo {
+      padding: 5px 11px; border-radius: 999px;
+      background: rgba(255, 180, 0, 0.16); border: 1px solid #ffbe00;
+      color: #ffcf40; font-size: 10px; font-weight: 800; letter-spacing: 1px;
+    }
+    .hud-btn {
+      background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #fff; padding: 6px 11px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;
+    }
+    .hud-btn.active { background: rgba(0, 229, 255, 0.24); border-color: #00e5ff; color: #00e5ff; }
+    .hud-btn.pro-btn {
+      background: linear-gradient(135deg, #ff006a, #7b00ff);
+      border-color: #ff66b2; color: #fff; text-decoration: none;
+      box-shadow: 0 0 18px rgba(255, 0, 106, 0.45);
+    }
+    #proOverlay {
+      position: fixed; inset: 0; z-index: 5;
+      display: none; align-items: center; justify-content: center;
+      background: rgba(4, 4, 12, 0.82); backdrop-filter: blur(12px);
+    }
+    #proOverlay.visible { display: flex; }
+    .pro-card {
+      max-width: 520px; padding: 34px; border-radius: 24px; text-align: center;
+      background: linear-gradient(160deg, rgba(18, 14, 38, 0.95), rgba(8, 8, 20, 0.98));
+      border: 1px solid rgba(255, 0, 128, 0.45);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 0, 106, 0.25);
+    }
+    .pro-card h2 { font-size: 24px; margin-bottom: 10px; color: #fff; }
+    .pro-card p { font-size: 14px; color: rgba(205, 220, 255, 0.82); line-height: 1.6; margin-bottom: 22px; }
+    .buy-cta {
+      display: inline-block; padding: 13px 28px; border-radius: 12px;
+      background: linear-gradient(135deg, #ff006a, #00d8ff);
+      color: #fff; font-weight: 800; font-size: 14px; text-decoration: none;
+      box-shadow: 0 10px 28px rgba(255, 0, 106, 0.45);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="waveCanvas"></canvas>
+
+  <div id="proOverlay">
+    <div class="pro-card">
+      <h2>🔒 WAVE PRO SÜRÜM (50 MODEL)</h2>
+      <p>
+        Ücretsiz Demo sürümünde yalnızca ilk <strong>3 Model</strong> açıktır.<br/>
+        <strong>04 – 50</strong> arasındaki tüm 3D İzometrik Dalga Telleri, Fiber-Optik Perdeler, Joy Division Pulsar, Synthwave, Vektörskop ve 88-Tuş Piyano modellerini açmak için <strong>WAVE PRO (50 Model)</strong> tam sürümünü edinin.
+      </p>
+      <a class="buy-cta" href="https://github.com/gokselteknikeller-h/Wave" target="_blank">💎 WAVE PRO TAM SÜRÜMÜ EDİN (50 MODEL)</a>
+    </div>
+  </div>
+
+  <div id="hud">
+    <span class="badge-demo">FREE DEMO (3 / 50 MODEL)</span>
+    <button class="hud-btn active" onclick="setDemoModel(0)" id="m0">01 • 3D LED Blok</button>
+    <button class="hud-btn" onclick="setDemoModel(1)" id="m1">02 • Neon Halka</button>
+    <button class="hud-btn" onclick="setDemoModel(2)" id="m2">03 • Kule Segment</button>
+    <button class="hud-btn" onclick="setDemoModel(3)" id="m3">🔒 04–50 PRO Modeller</button>
+    <a class="hud-btn pro-btn" href="https://github.com/gokselteknikeller-h/Wave" target="_blank">💎 50 MODEL PRO SATIN AL</a>
+  </div>
+
+  <script>
+    let currentModel = 0;
+    let sensitivity = 1.6;
+    let bassBoost = 1.8;
+    const NUM_BANDS = 64;
+    const rawBands = new Float32Array(NUM_BANDS);
+    const smoothBands = new Float32Array(NUM_BANDS);
+    const peakBands = new Float32Array(NUM_BANDS);
+    let lastPacketTime = 0;
+    let soundClock = 0;
+
+    function setDemoModel(idx) {
+      currentModel = idx;
+      for (let i = 0; i < 4; i++) {
+        const b = document.getElementById('m' + i);
+        if (b) b.classList.toggle('active', i === idx);
+      }
+      document.getElementById('proOverlay').classList.toggle('visible', idx >= 3);
+    }
+
+    function livelyAudioListener(arr) {
+      if (!arr || !arr.length) return;
+      let maxV = 0;
+      for (let i = 0; i < arr.length; i++) if (arr[i] > maxV) maxV = arr[i];
+      if (maxV > 0.002) {
+        lastPacketTime = performance.now();
+        for (let i = 0; i < NUM_BANDS; i++) {
+          let v = (arr[Math.floor((i / NUM_BANDS) * arr.length)] || 0) * sensitivity;
+          if (i < 10) v *= bassBoost;
+          rawBands[i] = Math.min(1.5, Math.max(0, v));
+        }
+      } else {
+        rawBands.fill(0);
+      }
+    }
+
+    function livelyPropertyListener(name, val) {
+      if (name === "effectMode") setDemoModel(parseInt(val, 10) || 0);
+      if (name === "audioSensitivity") sensitivity = parseFloat(val) || 1.6;
+      if (name === "bassBoost") bassBoost = parseFloat(val) || 1.8;
+    }
+
+    const canvas = document.getElementById('waveCanvas');
+    const ctx = canvas.getContext('2d', { alpha: false });
+    let W = 1920, H = 1080;
+    function resize() {
+      const aspect = window.innerWidth / Math.max(1, window.innerHeight);
+      W = Math.min(window.innerWidth, 1920);
+      H = Math.round(W / aspect);
+      canvas.width = W; canvas.height = H;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const STOPS = [
+      { r: 135, g: 245, b: 50 }, { r: 245, g: 225, b: 45 }, { r: 255, g: 150, b: 35 },
+      { r: 245, g: 55, b: 35 }, { r: 215, g: 25, b: 115 }, { r: 110, g: 35, b: 215 }, { r: 20, g: 110, b: 255 }
+    ];
+    function getColor(u) {
+      const s = Math.max(0, Math.min(1, u)) * (STOPS.length - 1);
+      const i = Math.min(STOPS.length - 2, Math.floor(s)), f = s - i;
+      return `rgb(${Math.round(STOPS[i].r + (STOPS[i+1].r - STOPS[i].r)*f)},${Math.round(STOPS[i].g + (STOPS[i+1].g - STOPS[i].g)*f)},${Math.round(STOPS[i].b + (STOPS[i+1].b - STOPS[i].b)*f)})`;
+    }
+
+    let lastTime = performance.now();
+    function animate(now) {
+      requestAnimationFrame(animate);
+      const dt = Math.min(0.05, (now - lastTime) / 1000);
+      lastTime = now;
+      if (now - lastPacketTime > 320) rawBands.fill(0);
+
+      let sum = 0;
+      for (let i = 0; i < NUM_BANDS; i++) {
+        smoothBands[i] += (rawBands[i] - smoothBands[i]) * 0.35;
+        if (smoothBands[i] < 0.001) smoothBands[i] = 0;
+        if (smoothBands[i] >= peakBands[i]) peakBands[i] = smoothBands[i];
+        else peakBands[i] = Math.max(0, peakBands[i] - dt * 0.45);
+        sum += smoothBands[i];
+      }
+      if (sum > 0.05) soundClock += dt;
+
+      ctx.fillStyle = '#040309';
+      ctx.fillRect(0, 0, W, H);
+
+      if (currentModel === 0) {
+        const cols = 16, rows = 12, hy = H * 0.74;
+        for (let c = 0; c < cols; c++) {
+          const u = c / (cols - 1);
+          const x = W * (0.04 + u * 0.88), cw = (W * 0.88 / cols) * 0.82;
+          const bh = H * 0.038 * (1.15 - u * 0.45), gap = bh * 0.16;
+          const act = Math.round(smoothBands[c * 3] * rows);
+          ctx.fillStyle = getColor(u);
+          for (let r = 0; r < act; r++) ctx.fillRect(x, hy - (r + 1) * (bh + gap), cw, bh);
+        }
+        ctx.fillStyle = 'rgba(255, 245, 200, 0.85)';
+        ctx.fillRect(0, hy - 3, W, 6);
+      } else if (currentModel === 1) {
+        const cx = W * 0.5, cy = H * 0.5, R = Math.min(W, H) * (0.25 + smoothBands[2] * 0.05);
+        ctx.strokeStyle = '#ff2a55'; ctx.lineWidth = 6;
+        ctx.beginPath(); ctx.arc(cx, cy, R, Math.PI * 0.5, Math.PI * 1.5); ctx.stroke();
+        ctx.strokeStyle = '#00e5ff';
+        ctx.beginPath(); ctx.arc(cx, cy, R, -Math.PI * 0.5, Math.PI * 0.5); ctx.stroke();
+      } else if (currentModel === 2) {
+        const cols = 12, segs = 16, fy = H * 0.85, sy = fy / segs, sx = W / cols;
+        for (let c = 0; c < cols; c++) {
+          const cx = (c + 0.5) * sx, act = Math.round(smoothBands[c * 4] * (segs - 1));
+          for (let r = 0; r < act; r++) {
+            const y = fy - (r + 0.7) * sy;
+            ctx.fillStyle = 'rgba(80, 140, 255, 0.5)';
+            ctx.fillRect(cx - sx * 0.18, y - sy * 0.35, sx * 0.36, sy * 0.7);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(cx - sx * 0.09, y - sy * 0.2, sx * 0.18, sy * 0.4);
+          }
+        }
+      }
+    }
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>

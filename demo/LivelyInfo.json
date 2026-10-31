@@ -1,0 +1,14 @@
+{
+  "AppVersion": "2.0.7.4",
+  "Title": "Wave Audio Visualizer (FREE DEMO - 3 Models)",
+  "Thumbnail": "thumbnail.jpg",
+  "Preview": "thumbnail.jpg",
+  "Desc": "Wave Audio Visualizer Ucretsiz Demo Surumu (Ilk 3 Model Acik). 50 Modelin tamamini iceren PRO surum icin: https://github.com/gokselteknikeller-h/Wave",
+  "Author": "Goksel Teknikeller",
+  "License": "Commercial / Freemium",
+  "Contact": "https://github.com/gokselteknikeller-h/Wave",
+  "Type": 1,
+  "Arguments": "--audio --pause-event true --system-nowplaying",
+  "FileName": "index.html",
+  "IsAbsolutePath": false
+}
