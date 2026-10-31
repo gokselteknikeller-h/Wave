@@ -8,6 +8,10 @@
 [![5120px Ultrawide Ready](https://img.shields.io/badge/%E2%9A%A1_5120px_ULTRAWIDE-120%2B_FPS_OPTIMIZED-88ff00?style=for-the-badge)](#)
 
 <p align="center">
+  <img src="./preview/wave_pro_50_showcase.gif" alt="WAVE PRO 50 Models Live Ultrawide Showcase" width="100%" />
+</p>
+
+<p align="center">
   <strong>Spotify, YouTube, Apple Music ve tüm bilgisayar seslerine gerçek zamanlı tepki veren 50 farklı görsel model.</strong><br/>
   <em>Ses yokken tamamen hareketsiz (sıfır CPU/GPU yükü), müzik başladığı anda milisaniyelik tepki!</em>
 </p>
@@ -16,7 +20,19 @@
 
 ---
 
-## 🖼️ Görsel Vitrini (Preview Gallery)
+## 🎬 Tam Versiyon (50 Model PRO) Canlı Kayıt GIF Galerisi (`5120x1440 • 120 FPS`)
+
+> Aşağıdaki GIF kayıtları doğrudan **5120x1440 (32:9 Super Ultrawide)** monitörde **WAVE PRO (50 Model Tam Sürüm)** çalışırken kaydedilmiştir:
+
+| **🎛️ 64-Kanal Stüdyo LED VU-Metre & Neon Halka Portal** | **🌈 Vibrant Fiber-Optik Dalga, DNA Sarmalı & Neon Perde** |
+| :---: | :---: |
+| ![LED VU & Portal GIF](./preview/gif_01_led_vu_portal.gif) | ![Fiber Wave & DNA GIF](./preview/gif_02_fiber_dna_wave.gif) |
+| **🏔️ 3D İzometrik Matris, Kanyon Arazi & 3D Şelale Spektrogram** | **🌀 Altıgen Portal, Lazer Kaleydoskop, Galaksi & Ayna Bloklar** |
+| ![3D Canyon & Waterfall GIF](./preview/gif_03_3d_canyon_waterfall.gif) | ![Portal Galaxy & Mirror GIF](./preview/gif_04_portal_galaxy_mirror.gif) |
+
+---
+
+## 🖼️ Yüksek Çözünürlüklü Model Referansları (Preview Gallery)
 
 | **01 // 3D Perspektif Blok LED & Ayna Yansıma** | **02 // Neon Halka Portal & Merkez Ses Dalgası** |
 | :---: | :---: |
@@ -73,7 +89,7 @@
 10. `10` — **V-Kanat Chevron Perspektif LED Blok Kuleleri** *(💎 PRO)*
 11. `11–18` — **Giroskop Halkalar, Siber Plak, Karadelik Jeti, Altıgen Portal, Sarkıt/Dikit & DNA Neon Merdiven** *(💎 PRO)*
 12. `19–26` — **Kesişen Pin-Stripe Perdeler, 3D Kanyon Arazi, 3D Tünel Halkaları & 3D Küresel Dünya Dalgaları** *(💎 PRO)*
-13. `27–35` — **X-Y Lissajous Vektörskop, Joy Division 22-Katman Pulsar, Analog İbreli VU-Metre, Tesla Yıldırım & 3D Şelale** *(💎 PRO)*
+13. `13–35` — **X-Y Lissajous Vektörskop, Joy Division 22-Katman Pulsar, Analog İbreli VU-Metre, Tesla Yıldırım & 3D Şelale** *(💎 PRO)*
 14. `36–50` — **Synthwave 3D Güneş, Bal Peteği, Siber Gökdelenler, 3D Kristal Kafes, İkiz Subwoofer, 88-Tuş Piyano, EKG & Grand Finale** *(💎 PRO)*
 
 ---
